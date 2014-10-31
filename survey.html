@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <head>
-  <title>Business Survey</title>
+  <title id="survey">Business Survey</title>
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -12,9 +12,21 @@
   <div class="container">
     <h1 class="text-center">Busi-Body</h1>
     <h2 class="text-center">Please complete this brief survey.</h2>
-    <form class ="form-horizontal">
-      <div name="targetLabel">
-        <p>Would you classify yourself as being a part of the group(s) <span></span>?</p>
+    <form id="surveyName" class ="form-horizontal">
+    <div name="surveyName">
+      <p>Please insert the name of the form you wish to reach</p>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-9">
+        <label class="col-sm-3">Survey Name</label>
+        <input class ="form-control" placeholder="Name provided by person or business"  name="surveyName" type="text" required />
+      </div>
+    </div>
+    </form>
+/////  Need to add submit functionality for #survey  //////
+    <form id="survey" class ="form-horizontal" style="display:none">
+      <div id="targetLabel">
+        <p>Would you classify yourself as being a part of the group(s) "<span></span>"?</p>
       </div>
       <div class="form-group">
         <div class ="col-sm-9">
@@ -24,8 +36,8 @@
           <input class ="form-control" name="target"  type="radio" value= "no" required />
         </div>
       </div>
-      <div name="problemLabel">
-        <p>Is <span></span> a problem for you?</p>
+      <div id="problemLabel">
+        <p>Is "<span></span>" a problem for you?</p>
       </div>
       <div class="form-group">
         <div class ="col-sm-9">
@@ -35,8 +47,8 @@
           <input class ="form-control" name="target"  type="radio" value= "no" required />
         </div>
       </div>
-      <div name="solutionLabel">
-        <p>If a business could <span></span> would that be helpful for this problem?</p>
+      <div id="solutionLabel">
+        <p>If a business could <span></span>, would that be helpful for this problem?</p>
       </div>
       <div class="form-group">
         <div class ="col-sm-9">
@@ -46,8 +58,8 @@
           <input class ="form-control" name="target"  type="radio" value= "no" required />
         </div>
       </div>
-      <div name="costLabel">
-        <p>Would you be willing to pay a cost of <span></span> for that service?</p>
+      <div id="costLabel">
+        <p>Would you be willing to pay a cost of $<span></span> for that service?</p>
       </div>
       <div class="form-group">
         <div class ="col-sm-9">
@@ -59,10 +71,8 @@
       </div>
       <div class="form-group">
         <div class ="col-sm-9">
-        <label class="col-sm-3 label-control">Yes</label>
-          <input class ="form-control" name="target"  type="radio" value= "yes" required />
-        <label class="col-sm-3 label-control">No</label>
-          <input class ="form-control" name="target"  type="radio" value= "no" required />
+        <label class="col-sm-3 label-control">Thank you for your time!</label>
+        <button class ="btn btn-large" name="submit"  value= "submit">Submit</button>
         </div>
       </div>
     </form>

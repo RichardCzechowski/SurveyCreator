@@ -34,11 +34,11 @@ $(function() {
   }
 
 
-  var loadContacts = function(){
+  var fillSurvey= function(){
     console.log("loading from Parse");
 
-    var contact = Parse.Object.extend("Contact");
-    var query = new Parse.Query(contact);
+    var surveyInfo = Parse.Object.extend("Business");
+    var query = new Parse.Query(business);
     query.find({
       success: function(results) {
       var newLIs=results.map(function(element){
@@ -52,8 +52,9 @@ $(function() {
     });
   }
 
-  if ($("ul#list")[0]){
-    loadContacts();
+  if ($("title").val()=="Business Survey"){
+   console.log("W3rks");
+    //fillSurvey();
   }
 
 });

@@ -12,50 +12,34 @@
   <div class="container">
     <h1 class="text-center">Results for your survey</h1>
     <h2 class="text-center"></h2>
-    <form id="businessIdea" class ="form-horizontal">
+    <form id="getSurvey" class ="form-horizontal">
       <div class="form-group">
         <label class="col-sm-3 label-control">Email</label>
         <div class ="col-sm-9">
-          <input class ="form-control" placeholder="Contact Email" name="email"  type="email" required />
+          <input class ="form-control" placeholder="Insert email and press enter for results" name="email"  type="email" required />
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-sm-3 label-control">Survey Name</label>
-        <div class ="col-sm-9">
-          <input class ="form-control" placeholder="The title your target audience will check for." name="surveyName"  type="text" required />
+      </form>
+        <span class="label label-primary">target</span>
+      <div id="target" class= "progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:60%">
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-sm-3 label-control">Target Audience</label>
-        <div class ="col-sm-9">
-          <input class ="form-control" placeholder="Target" name="target"  type="text" required />
+        <span class="label label-primary">problem</span>
+      <div id="problem" class= "progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:60%">
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-sm-3 label-control">Problem</label>
-        <div class ="col-sm-9">
-          <input class ="form-control" placeholder="Target's Problem" name="problem"  type="text" required />
+        <span class="label label-primary">solution</span>
+      <div id="solution" class= "progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:60%">
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-sm-3 label-control">Solution</label>
-        <div class ="col-sm-9">
-          <input class ="form-control" placeholder="Your Business Solution" name="solution"  type="text" required />
+        <span class="label label-primary">cost</span>
+      <div id="cost" class= "progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:60%">
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-sm-3 label-control">Cost</label>
-        <div class ="col-sm-9">
-          <input class ="form-control" placeholder="Cost to Target" name="cost"  type="number" required />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-3 label-control">Submit</label>
-        <div class ="col-sm-9">
-          <button class ="submit" class="btn btn-primary">Submit</button>
-        </div>
-      </div>
-    </form>
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

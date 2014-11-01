@@ -44,6 +44,7 @@ $(function() {
     var solution= $("input[name=solution]").val().toLowerCase();;
     var cost= $("input[name=cost]").val().toLowerCase();;
     var onSuccess = function(){
+      alert("Survey Created!");
       resetForm($("form")[0]);
     }
     addBusiness(email, surveyName, target, problem, solution, cost, onSuccess);

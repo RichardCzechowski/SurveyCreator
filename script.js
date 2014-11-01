@@ -9,16 +9,16 @@ $(function() {
     query.equalTo("surveyName", surveyName);
     query.count({
       success: function(count){
-          if (count!=0){
-        console.log(count);
-        alert("A survey with the name '"+surveyName+"' already exists! Please choose another.");
+        if (count!=0){
+          console.log(count);
+          alert("A survey with the name '"+surveyName+"' already exists! Please choose another.");
         }
         else{
-        var business = new Business();
-        var parsePromise =  business.save({email: email, surveyName: surveyName, target: target, problem: problem, solution: solution, cost: cost })
-        parsePromise.then(successCb, function(error){
-        alert("Failure to create business");
-        })
+          var business = new Business();
+          var parsePromise =  business.save({email: email, surveyName: surveyName, target: target, problem: problem, solution: solution, cost: cost })
+          parsePromise.then(successCb, function(error){
+            alert("Failure to create business");
+          })
         }
       },
       error: function(error){
@@ -65,15 +65,19 @@ $(function() {
     query.equalTo("surveyName",surveyName);
     query.first({
       success: function(object) {
-        $("h1").replaceWith("<h1 class='text-center'>"+surveyName.toUpperCase()+"</h1>");
-        $("form").show();
-        $("#surveyName").hide();
-        var data=[object.attributes.target, object.attributes.problem, object.attributes.solution, object.attributes.cost]
-        var label=["target","problem","solution","cost"]
-        for (i=0; i<data.length;i++){
-          console.log(data[i].toString());
-          $("#"+label[i]+"Label > p span").text(data[i].toString());
+        if(object.id!=undefined){
+          $("h1").replaceWith("<h1 class='text-center'>"+surveyName.toUpperCase()+"</h1>");
+          $("form").show();
+          $("#surveyName").hide();
+          var data=[object.attributes.target, object.attributes.problem, object.attributes.solution, object.attributes.cost]
+          var label=["target","problem","solution","cost"]
+          for (i=0; i<data.length;i++){
+            console.log(data[i].toString());
+            $("#"+label[i]+"Label > p span").text(data[i].toString());
+          }
         }
+        else
+          alert(surveyName + " does not seem to be a valid survey name, please try again.");
       },
       error: function(error) {
         alert("Error: " + error.code + " " + error.message);

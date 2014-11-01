@@ -3,11 +3,26 @@ $(function() {
   Parse.initialize("It43BqxAW9BCoNjAKnGV9kKsQ4JRSZJfwTBxKMVn", "IT27sQWrzcw9V6M3IuEXrAA8gQ8a6yinpuwJDjdn");
   //Add a business idea to Parse
   function addBusiness(email, surveyName, target, problem, solution, cost, successCb){
+    //check to see if business exists, if not, create
     var Business = Parse.Object.extend("Business");
-    var business = new Business();
-    var parsePromise =  business.save({email: email, surveyName: surveyName, target: target, problem: problem, solution: solution, cost: cost })
-    parsePromise.then(successCb, function(error){
-      alert("Failure to create business");
+    var query = new Parse.Query(Business);
+    query.equalTo("surveyName", surveyName);
+    query.count({
+      success: function(count){
+          if (count!=0){
+        console.log(count);
+        alert("A survey with the name '"+surveyName+"' already exists! Please choose another.");
+        }
+        else{
+        var business = new Business();
+        var parsePromise =  business.save({email: email, surveyName: surveyName, target: target, problem: problem, solution: solution, cost: cost })
+        parsePromise.then(successCb, function(error){
+        alert("Failure to create business");
+        })
+        }
+      },
+      error: function(error){
+      }
     })
   }
 
@@ -22,12 +37,12 @@ $(function() {
 
   //business idea submit
   $("#businessIdea").on("submit", function(){
-    var email= $("input[name=email]").val();
-    var surveyName =$("input[name=surveyName]").val();
-    var target= $("input[name=target]").val();
-    var problem= $("input[name=problem]").val();
-    var solution= $("input[name=solution]").val();
-    var cost= $("input[name=cost]").val();
+    var email= $("input[name=email]").val().toLowerCase();
+    var surveyName =$("input[name=surveyName]").val().toLowerCase();;
+    var target= $("input[name=target]").val().toLowerCase();;
+    var problem= $("input[name=problem]").val().toLowerCase();;
+    var solution= $("input[name=solution]").val().toLowerCase();;
+    var cost= $("input[name=cost]").val().toLowerCase();;
     var onSuccess = function(){
       resetForm($("form")[0]);
     }
@@ -49,7 +64,7 @@ $(function() {
     query.equalTo("surveyName",surveyName);
     query.first({
       success: function(object) {
-        $("h1").replaceWith("<h1 class='text-center'>"+surveyName+"</h1>");
+        $("h1").replaceWith("<h1 class='text-center'>"+surveyName.toUpperCase()+"</h1>");
         $("form").show();
         $("#surveyName").hide();
         var data=[object.attributes.target, object.attributes.problem, object.attributes.solution, object.attributes.cost]
@@ -67,7 +82,7 @@ $(function() {
   //On survey page, once name of survey is submitted- retrieve data.
   var surveyName="";
   $("#surveyName").on("submit", function(){
-    surveyName= $("input[name=surveyName]").val();
+    surveyName= $("input[name=surveyName]").val().toLowerCase();;
     if ($("title#survey").length){
       console.log(surveyName);
       fillSurvey(surveyName);
@@ -76,10 +91,10 @@ $(function() {
   });
   //On survey page, once survey is completed- send data to parse
   $("#surveyResults").on("submit", function(){
-    var target = $("input[name=target]:checked").val();
-    var problem= $("input[name=problem]:checked").val();
-    var solution= $("input[name=solution]:checked").val();
-    var cost= $("input[name=cost]:checked").val();
+    var target = $("input[name=target]:checked").val().toLowerCase();;
+    var problem= $("input[name=problem]:checked").val().toLowerCase();;
+    var solution= $("input[name=solution]:checked").val().toLowerCase();;
+    var cost= $("input[name=cost]:checked").val().toLowerCase();;
     var successCb= function(){
       $("#surveyResults").hide();
       $("h2").replaceWith("<h2 class='text-center'>Survey completed! Thank you!</h2>");
@@ -90,7 +105,7 @@ $(function() {
   })
   //results page- on enter email, get name of business
   $("#getSurvey").on("submit", function(){
-    var email=$("input[name=email]").val();
+    var email=$("input[name=email]").val().toLowerCase();;
     var Business = Parse.Object.extend("Business");
     var query= new Parse.Query(Business);
     query.equalTo("email" , email);
@@ -106,12 +121,12 @@ $(function() {
             var totalResult= targetResult= problemResult= solutionResult= costResult=0;
             totalResult=result.length;
             for (i=0; i<result.length; i++){
-            targetResult+= parseInt(result[i].get("target"));
-            problemResult += parseInt(result[i].get("problem"));
-            solutionResult += parseInt(result[i].get("solution"));
-            costResult += parseInt(result[i].get("cost"));
-          }
-          console.log(targetResult);
+              targetResult+= parseInt(result[i].get("target"));
+              problemResult += parseInt(result[i].get("problem"));
+              solutionResult += parseInt(result[i].get("solution"));
+              costResult += parseInt(result[i].get("cost"));
+            }
+            console.log(targetResult);
             fillResults(totalResult, targetResult, problemResult, solutionResult, costResult, surveyResults);
           },
           error: function (error){
@@ -128,21 +143,21 @@ $(function() {
   })
 
   function fillResults(total, target, problem, solution, cost, surveyName){
-    $("h1").text(surveyName)
+    $("h1").text(surveyName.toUpperCase())
     $("#getSurvey").hide();
     console.log(target);
     target= Math.floor(100*(target/total), -2);
     problem= Math.floor( target* (problem/total), -2);
     solution= Math.floor( target* (solution/total),-2);
     cost= Math.floor(target* (cost/total), -2);
-$("#target>div").append(target);
-$("#problem>div").append(problem);
-$("#solution>div").append(solution);
-$("#cost>div").append(cost);
- $('#target>div').css('width', target+"%").attr('aria-valuenow', target); 
- $('#problem>div').css('width', problem+"%").attr('aria-valuenow', problem); 
- $('#solution>div').css('width', solution+"%").attr('aria-valuenow',solution); 
- $('#cost>div').css('width', cost+"%").attr('aria-valuenow', cost); 
+    $("#target>div").append(target);
+    $("#problem>div").append(problem);
+    $("#solution>div").append(solution);
+    $("#cost>div").append(cost);
+    $('#target>div').css('width', target+"%").attr('aria-valuenow', target); 
+    $('#problem>div').css('width', problem+"%").attr('aria-valuenow', problem); 
+    $('#solution>div').css('width', solution+"%").attr('aria-valuenow',solution); 
+    $('#cost>div').css('width', cost+"%").attr('aria-valuenow', cost); 
   }
 
 });

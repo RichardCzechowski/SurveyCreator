@@ -1,24 +1,42 @@
 $(function() {
   console.log("Document Ready");
+  $.fn.serializeObject = function()
+  {
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+      if (o[this.name]) {
+        if (!o[this.name].push) {
+          o[this.name] = [o[this.name]];
+        }
+        o[this.name].push(this.value || '');
+      } else {
+        o[this.name] = this.value || '';
+      }
+    });
+    return o;
+  };
   Parse.initialize("It43BqxAW9BCoNjAKnGV9kKsQ4JRSZJfwTBxKMVn", "IT27sQWrzcw9V6M3IuEXrAA8gQ8a6yinpuwJDjdn");
   //Add a business idea to Parse
-  function addBusiness(email, surveyName, target, problem, solution, cost, successCb){
+  function addBusiness(form, successCb){
+    debugger;
+    console.log(form.surveyName);
     //check to see if business exists, if not, create
     var Business = Parse.Object.extend("Business");
     var query = new Parse.Query(Business);
-    query.equalTo("surveyName", surveyName);
+    query.equalTo("surveyName", form.surveyName);
     query.count({
       success: function(count){
-          if (count!=0){
-        console.log(count);
-        alert("A survey with the name '"+surveyName+"' already exists! Please choose another.");
+        if (count!=0){
+          console.log(count);
+          alert("A survey with the name '"+form.surveyName+"' already exists! Please choose another.");
         }
         else{
-        var business = new Business();
-        var parsePromise =  business.save({email: email, surveyName: surveyName, target: target, problem: problem, solution: solution, cost: cost })
-        parsePromise.then(successCb, function(error){
-        alert("Failure to create business");
-        })
+          var business = new Business();
+          var parsePromise =  business.save({surveyName: form.surveyName, email: form.email, target: form.target, problem: form.problem, solution: form.solution, cost: form.cost })
+          parsePromise.then(successCb, function(error){
+            alert("Failure to create business");
+          })
         }
       },
       error: function(error){
@@ -26,10 +44,10 @@ $(function() {
     })
   }
 
-  function addResults(surveyName, target, problem, solution, cost, successCb){
+  function addResults(form, successCb){
     var Result = Parse.Object.extend("Result");
     var result= new Result();
-    var parsePromise= result.save({surveyName: surveyName, target:target, problem: problem, solution: solution, cost: cost});
+    var parsePromise= result.save({surveyName: surveyName, target: form.target, problem: form.problem, solution: form.solution, cost: form.cost});
     parsePromise.then(successCb, function(error){
       alert("There was a problem saving your survey, please try again.");
     })
@@ -37,17 +55,14 @@ $(function() {
 
   //business idea submit
   $("#businessIdea").on("submit", function(){
-    var email= $("input[name=email]").val().toLowerCase();
-    var surveyName =$("input[name=surveyName]").val().toLowerCase();;
-    var target= $("input[name=target]").val().toLowerCase();;
-    var problem= $("input[name=problem]").val().toLowerCase();;
-    var solution= $("input[name=solution]").val().toLowerCase();;
-    var cost= $("input[name=cost]").val().toLowerCase();;
+    debugger;
+    var formObject = $(this).serializeObject();
+    formObject= objLowerCase(formObject);
     var onSuccess = function(){
       alert("Survey Created!");
       resetForm($("form")[0]);
     }
-    addBusiness(email, surveyName, target, problem, solution, cost, onSuccess);
+    addBusiness(formObject, onSuccess);
     return false;
   })
 
@@ -65,15 +80,19 @@ $(function() {
     query.equalTo("surveyName",surveyName);
     query.first({
       success: function(object) {
-        $("h1").replaceWith("<h1 class='text-center'>"+surveyName.toUpperCase()+"</h1>");
-        $("form").show();
-        $("#surveyName").hide();
-        var data=[object.attributes.target, object.attributes.problem, object.attributes.solution, object.attributes.cost]
-        var label=["target","problem","solution","cost"]
-        for (i=0; i<data.length;i++){
-          console.log(data[i].toString());
-          $("#"+label[i]+"Label > p span").text(data[i].toString());
+        if(object.id!=undefined){
+          $("h1").replaceWith("<h1 class='text-center'>"+surveyName.toUpperCase()+"</h1>");
+          $("form").show();
+          $("#surveyName").hide();
+          var data=[object.attributes.target, object.attributes.problem, object.attributes.solution, object.attributes.cost]
+          var label=["target","problem","solution","cost"]
+          for (i=0; i<data.length;i++){
+            console.log(data[i].toString());
+            $("#"+label[i]+"Label > p span").text(data[i].toString());
+          }
         }
+        else
+          alert(surveyName + " does not seem to be a valid survey name, please try again.");
       },
       error: function(error) {
         alert("Error: " + error.code + " " + error.message);
@@ -81,7 +100,6 @@ $(function() {
     });
   }
   //On survey page, once name of survey is submitted- retrieve data.
-  var surveyName="";
   $("#surveyName").on("submit", function(){
     surveyName= $("input[name=surveyName]").val().toLowerCase();;
     if ($("title#survey").length){
@@ -92,15 +110,14 @@ $(function() {
   });
   //On survey page, once survey is completed- send data to parse
   $("#surveyResults").on("submit", function(){
-    var target = $("input[name=target]:checked").val().toLowerCase();;
-    var problem= $("input[name=problem]:checked").val().toLowerCase();;
-    var solution= $("input[name=solution]:checked").val().toLowerCase();;
-    var cost= $("input[name=cost]:checked").val().toLowerCase();;
+    var formObject = $(this).serializeObject();
+    console.log(formObject);
+    formObject= objLowerCase(formObject);
     var successCb= function(){
       $("#surveyResults").hide();
       $("h2").replaceWith("<h2 class='text-center'>Survey completed! Thank you!</h2>");
     };
-    addResults(surveyName, target, problem, solution, cost, successCb);
+    addResults(formObject, successCb);
 
     return false;
   })
@@ -161,4 +178,9 @@ $(function() {
     $('#cost>div').css('width', cost+"%").attr('aria-valuenow', cost); 
   }
 
+  function objLowerCase(obj){
+    $.each(obj, function(key,value) {if(typeof value==='string')
+             {obj[key]=value.toLowerCase()}});
+           return(obj);
+  };
 });
